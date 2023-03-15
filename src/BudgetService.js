@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 import isBetween from "dayJS/plugin/isBetween";
-import { BudgetRepo } from "./BudgetRepo";
+import { Budget, BudgetRepo } from "./BudgetRepo";
 
 dayjs.extend(isBetween);
 
@@ -9,12 +9,16 @@ export class BudgetService {
 
   constructor() {}
 
+  getAll() {
+    return [new Budget("202101", 31)];
+  }
+
   getBudgetDataInDuration(start, end) {
     const startYearMonth = dayjs(start).format("YYYYMM");
     const endYearMonth = dayjs(end).format("YYYYMM");
     const durationByMonth =
       dayjs(startYearMonth).diff(dayjs(endYearMonth), "month", true) + 1;
-    const data = this.budgeRepo.getAll();
+    const data = this.getAll();
     const budgetDataInDuration = data.filter((item) => {
       const result = dayjs(item.year_month).isSame(
         dayjs(startYearMonth),

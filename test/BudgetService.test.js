@@ -8,8 +8,11 @@ describe("BudgeService Test", () => {
   let budgetService = new BudgetService();
 
   const givenBudgetData = (budgetData) => {
+    budgetService.getAll = () => [new Budget("202303", 31)];
     // BudgetRepo.mockImplementationOnce(() => {
-    //   return { getAll: jest.fn().mockReturnValueOnce(budgetData) };
+    //   return {
+    //     getAll: jest.fn().mockReturnValueOnce(),
+    //   };
     // });
   };
 
@@ -22,7 +25,7 @@ describe("BudgeService Test", () => {
   });
 
   it("should be full-month ", () => {
-    givenBudgetData([new Budget("202303", 31)]);
+    givenBudgetData();
     const total = budgetService.query(dayJS("2023-03-01"), dayJS("2023-03-31"));
     expect(total).toBe(31);
   });
