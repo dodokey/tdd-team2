@@ -15,15 +15,12 @@ export class BudgetService {
     const durationByMonth =
       dayjs(startYearMonth).diff(dayjs(endYearMonth), "month", true) + 1;
     const data = this.budgeRepo.getAll();
-    console.log("this.budgeRepo: ", this.budgeRepo);
-    console.log("data: ", data);
     const budgetDataInDuration = data.filter((item) => {
       const result = dayjs(item.year_month).isSame(
         dayjs(startYearMonth),
         dayjs(endYearMonth),
         "month"
       );
-      console.log("result: ", result);
 
       return result;
     });
@@ -38,32 +35,23 @@ export class BudgetService {
 
       const { durationByMonth, budgetDataInDuration } =
         this.getBudgetDataInDuration(start, end);
-
-      console.log("budgetDataInDuration: ", budgetDataInDuration);
-      console.log("durationByMonth: ", durationByMonth);
       for (let i = 0; i < durationByMonth; i++) {
         const budgetPerDay =
           budgetDataInDuration[i].amount /
           dayjs(start).add(i, "month").daysInMonth();
-        console.log("budgetPerDay: ", budgetPerDay);
 
         if (i === 0 && dayjs(start).date() !== 1) {
           // 不足月
-          console.log("1");
           total +=
             (dayjs(start).daysInMonth() - dayjs(start).date() + 1) *
             budgetPerDay;
         } else if (i === durationByMonth.length - 1 && isFinalDate(end)) {
           // 不足月
-          console.log("2");
           total += dayjs(end).date() * budgetPerDay;
         } else {
-          console.log("3");
-          console.log(budgetDataInDuration[i].amount);
           // 直接+足月的 budget
           total += budgetDataInDuration[i].amount;
         }
-        console.log("4");
       }
       return total;
     } catch (error) {
